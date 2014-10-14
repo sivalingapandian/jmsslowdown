@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<project name="JMSSlowdown" basedir="." default="all">
+
+	<property name="ICSServicesSrc" value="../" />
+	<property environment="env" />
+
+
+	<path id="ProjectCP">
+		<pathelement location="${ICSServicesSrc}/lib/ICSServices.jar" />
+		<pathelement location="${ICSServicesSrc}/lib/wlfullclient.jar" />
+		<pathelement location="${ICSServicesSrc}/lib/activemq-all-4.1.2.jar" />
+	</path>
+	
+	<target name="all">
+		<antcall target="package" />
+		<antcall target="BuildInstallPackage" />
+	</target>
+
+	<target name="build">
+		<delete dir="${ICSServicesSrc}/Build/tmp" quiet="true" failonerror="false" />
+		<mkdir dir="${ICSServicesSrc}/Build/tmp" />
+
+		<echo message="Compiling main source domain now"/>
+		<javac destdir="${ICSServicesSrc}/Build/tmp" debug="on" fork="true" memoryinitialsize="256m" memorymaximumsize="512m" deprecation="on">
+			<src path="${ICSServicesSrc}/src/jms"/>
+    		<classpath refid="ProjectCP" />			
+		</javac>
+		
+	</target>
+
+	<target name="package" depends="build">
+
+		<delete dir="${ICSServicesSrc}/Build/tmp/lib" quiet="true" failonerror="false" />
+		<mkdir dir="${ICSServicesSrc}/Build/tmp/lib" />
+		
+		<jar jarfile="${ICSServicesSrc}/Build/tmp/lib/JMSSlowdown.jar" >
+			<fileset dir="${ICSServicesSrc}/Build/tmp">
+				<patternset>
+					<include name="**/*.class" />					
+				</patternset>
+			</fileset>
+		</jar>
+		
+		<echo message="Copying jar file"/>
+		<copy todir="${ICSServicesSrc}/Build/tmp/lib">
+			<fileset dir="${ICSServicesSrc}/lib">
+				<include name="*.jar" />				
+			</fileset>			
+		</copy>
+		
+	</target>
+
+	<target name="BuildInstallPackage">
+
+		<mkdir dir="${ICSServicesSrc}/Build/tmp/scripts" />
+		<fixcrlf srcdir="${ICSServicesSrc}/scripts" destdir="${ICSServicesSrc}/Build/tmp/scripts" eol="lf" >
+			<include name="*.*"/>			
+		</fixcrlf>
+		
+		<echo message="Building JMSSlowdown Installation Package"/>
+		
+		<delete file="${ICSServicesSrc}/Build/JMSSlowdown.zip" quiet="true" failonerror="false" />
+		<delete dir="${ICSServicesSrc}/Build/tmp/jms" quiet="true" failonerror="false" />
+		
+		<zip zipfile="${ICSServicesSrc}/Build/JMSSlowdown.zip">
+
+			<zipfileset dir="${ICSServicesSrc}/Build/tmp">
+				<include name="**/*.*" />
+			</zipfileset>
+			
+		</zip>
+		
+	</target>
+
+</project>

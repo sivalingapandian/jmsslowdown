@@ -1,0 +1,6 @@
+tcp://ohedftgdb1.internal.gxs.com:63616 10 Pending ConnectionFactory com.gxs.tgms.pandian.TestQueue AMQ
+tcp://ohedftgdb2.internal.gxs.com:63616 20 Pending ConnectionFactory com.gxs.tgms.pandian.TestQueue AMQ
+tcp://ohedftgdb1.internal.gxs.com:63616 1 1 com.gxs.tgms.pandian.TestQueue ConnectionFactory AMQ
+
+
+t3:\\localhost:7001 10 Pending weblogic.examples.jms.QueueConnectionFactory test.weblogic.jms.LoadQueue WL
